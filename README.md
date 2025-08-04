@@ -1,2 +1,2 @@
 # Dungeon_C
-Dungeon_
+Simple C game shooter/dungeon explorer with SDL3 library
