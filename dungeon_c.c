@@ -1,4 +1,7 @@
-#include <SDL3/SDL.h>
+// dipendenza: libsdl1-dev (libreria grafica)
+// compilazione: gcc -o dungeon-c dungeon.c -lSDL2 -lSDL2main -lm
+
+#include <SDL2/SDL.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -45,6 +48,7 @@ Position player;
 Bullet bullets[MAX_BULLETS];
 Enemy enemies[MAX_ENEMIES];
 int enemy_count = 0;
+Uint32 last_move_time = 0; // Per limitare la velocità di movimento
 
 // Inizializza la mappa con muri
 void init_map() {
@@ -91,6 +95,17 @@ void create_v_corridor(int y1, int y2, int x) {
 // Genera la mappa procedurale
 void generate_map() {
     init_map();
+    
+    // Inizializza i proiettili
+    for (int i = 0; i < MAX_BULLETS; i++) {
+        bullets[i].active = false;
+    }
+    
+    // Inizializza i nemici
+    enemy_count = 0;
+    for (int i = 0; i < MAX_ENEMIES; i++) {
+        enemies[i].alive = false;
+    }
     
     // Crea stanze casuali
     int rooms[6][4]; // x, y, width, height
@@ -206,8 +221,11 @@ void update_enemies() {
             int new_y = enemies[i].pos.y + dy;
             
             if (is_walkable(new_x, new_y)) {
-                enemies[i].pos.x = new_x;
-                enemies[i].pos.y = new_y;
+                // Controlla che non ci sia il player nella nuova posizione
+                if (!(new_x == player.x && new_y == player.y)) {
+                    enemies[i].pos.x = new_x;
+                    enemies[i].pos.y = new_y;
+                }
             }
         }
     }
@@ -215,36 +233,55 @@ void update_enemies() {
 
 // Gestisce l'input
 void handle_input(SDL_Event* e, bool* running) {
-    const bool* keys = SDL_GetKeyboardState(NULL);
+    const Uint8* keys = SDL_GetKeyboardState(NULL);
     
     while (SDL_PollEvent(e)) {
-        if (e->type == SDL_EVENT_QUIT) {
+        if (e->type == SDL_QUIT) {
             *running = false;
         }
         
         // Sparo con frecce direzionali (solo al keydown per evitare spam)
-        if (e->type == SDL_EVENT_KEY_DOWN) {
-            switch (e->key.key) {
+        if (e->type == SDL_KEYDOWN) {
+            switch (e->key.keysym.sym) {
                 case SDLK_UP:    shoot_bullet(0, -1); break;
                 case SDLK_DOWN:  shoot_bullet(0, 1);  break;
                 case SDLK_LEFT:  shoot_bullet(-1, 0); break;
                 case SDLK_RIGHT: shoot_bullet(1, 0);  break;
+                case SDLK_r:     // Tasto R per rigenerare la mappa
+                    generate_map();
+                    break;
             }
         }
     }
     
-    // Movimento continuo con WASD
-    int new_x = player.x;
-    int new_y = player.y;
-    
-    if (keys[SDL_SCANCODE_W]) new_y--;
-    if (keys[SDL_SCANCODE_S]) new_y++;
-    if (keys[SDL_SCANCODE_A]) new_x--;
-    if (keys[SDL_SCANCODE_D]) new_x++;
-    
-    if (is_walkable(new_x, new_y)) {
-        player.x = new_x;
-        player.y = new_y;
+    // Movimento continuo con WASD ma limitato nel tempo
+    Uint32 current_time = SDL_GetTicks();
+    if (current_time - last_move_time > 100) { // Muovi ogni 100ms
+        int new_x = player.x;
+        int new_y = player.y;
+        bool moved = false;
+        
+        if (keys[SDL_SCANCODE_W]) { new_y--; moved = true; }
+        else if (keys[SDL_SCANCODE_S]) { new_y++; moved = true; }
+        else if (keys[SDL_SCANCODE_A]) { new_x--; moved = true; }
+        else if (keys[SDL_SCANCODE_D]) { new_x++; moved = true; }
+        
+        if (moved && is_walkable(new_x, new_y)) {
+            // Controlla collisioni con nemici
+            bool can_move = true;
+            for (int i = 0; i < enemy_count; i++) {
+                if (enemies[i].alive && enemies[i].pos.x == new_x && enemies[i].pos.y == new_y) {
+                    can_move = false;
+                    break;
+                }
+            }
+            
+            if (can_move) {
+                player.x = new_x;
+                player.y = new_y;
+                last_move_time = current_time;
+            }
+        }
     }
 }
 
@@ -257,7 +294,7 @@ void render(SDL_Renderer* renderer) {
     // Disegna la mappa
     for (int y = 0; y < MAP_HEIGHT; y++) {
         for (int x = 0; x < MAP_WIDTH; x++) {
-            SDL_FRect rect = {x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE};
+            SDL_Rect rect = {x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE};
             
             switch (map[y][x]) {
                 case WALL:
@@ -278,7 +315,7 @@ void render(SDL_Renderer* renderer) {
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); // Rosso
     for (int i = 0; i < enemy_count; i++) {
         if (enemies[i].alive) {
-            SDL_FRect rect = {
+            SDL_Rect rect = {
                 enemies[i].pos.x * CELL_SIZE, 
                 enemies[i].pos.y * CELL_SIZE, 
                 CELL_SIZE, 
@@ -292,7 +329,7 @@ void render(SDL_Renderer* renderer) {
     SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255); // Giallo
     for (int i = 0; i < MAX_BULLETS; i++) {
         if (bullets[i].active) {
-            SDL_FRect rect = {
+            SDL_Rect rect = {
                 bullets[i].pos.x * CELL_SIZE + CELL_SIZE/3, 
                 bullets[i].pos.y * CELL_SIZE + CELL_SIZE/3, 
                 CELL_SIZE/3, 
@@ -304,7 +341,7 @@ void render(SDL_Renderer* renderer) {
     
     // Disegna il player
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); // Verde
-    SDL_FRect player_rect = {
+    SDL_Rect player_rect = {
         player.x * CELL_SIZE, 
         player.y * CELL_SIZE, 
         CELL_SIZE, 
@@ -317,7 +354,7 @@ void render(SDL_Renderer* renderer) {
 
 int main(int argc, char* argv[]) {
     // Inizializza SDL
-    if (!SDL_Init(SDL_INIT_VIDEO)) {
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         printf("Errore SDL: %s\n", SDL_GetError());
         return 1;
     }
@@ -325,9 +362,11 @@ int main(int argc, char* argv[]) {
     // Crea finestra
     SDL_Window* window = SDL_CreateWindow(
         "Dungeon Explorer 2D",
+        SDL_WINDOWPOS_UNDEFINED,
+        SDL_WINDOWPOS_UNDEFINED,
         WINDOW_WIDTH,
         WINDOW_HEIGHT,
-        0
+        SDL_WINDOW_SHOWN
     );
     
     if (!window) {
@@ -337,7 +376,7 @@ int main(int argc, char* argv[]) {
     }
     
     // Crea renderer
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, NULL);
+    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if (!renderer) {
         printf("Errore creazione renderer: %s\n", SDL_GetError());
         SDL_DestroyWindow(window);
@@ -354,10 +393,10 @@ int main(int argc, char* argv[]) {
     // Game loop principale
     bool running = true;
     SDL_Event e;
-    Uint64 last_time = SDL_GetTicks();
+    Uint32 last_time = SDL_GetTicks();
     
     while (running) {
-        Uint64 current_time = SDL_GetTicks();
+        Uint32 current_time = SDL_GetTicks();
         
         // Limita a ~60 FPS
         if (current_time - last_time < 16) {
@@ -383,4 +422,3 @@ int main(int argc, char* argv[]) {
     
     return 0;
 }
-
