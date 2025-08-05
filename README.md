@@ -34,4 +34,5 @@ a basso livello e con un'efficiente gestione della memoria.
  **CONTROLLI:**
  - WASD: movimento
  - Frecce direzionali: sparo
+ - R: resetta mappa
  - Obiettivo: elimina tutti i nemici rossi!
