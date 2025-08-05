@@ -19,7 +19,7 @@ a basso livello e con un'efficiente gestione della memoria.
 - 🎨 **Grafica pixel** colorata (verde=player, rosso=nemici, grigio=mura)
 
 
-ISTRUZIONI PER COMPILARE:
+**ISTRUZIONI PER LA COMPILAZIONE:**
 1. Installa SDL2: 
     - Linux (Ubuntu): sudo apt install libsdl2-dev
     - macOS: brew install sdl2
@@ -31,7 +31,7 @@ ISTRUZIONI PER COMPILARE:
  3. Esegui:
     ./Dungeon_C
 
- CONTROLLI:
+ **CONTROLLI:**
  - WASD: movimento
  - Frecce direzionali: sparo
  - Obiettivo: elimina tutti i nemici rossi!
