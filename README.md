@@ -1,5 +1,23 @@
 # Dungeon_C
-Un semplice esercizio di programmazione in C L'obbiettivo del progetto è scrivere un gioco semplice, a basso livello e con un'efficiente gestione della memoria e, soprattutto, con le minime dipendenze possibili: l'unica dipendenza è la libreria grafica SLD2
+Un semplice esercizio di programmazione: 
+
+L'obbiettivo del progetto è scrivere un gioco semplice, 
+a basso livello e con un'efficiente gestione della memoria. 
+
+**Perché ho scelto C:**
+- Minime dipendenze (solo SDL2)
+- Controllo totale della memoria
+- Codice molto leggibile e commentato
+
+...l'unica dipendenza è la libreria grafica SLD2
+
+**Caratteristiche implementate:**
+- 🗺️ **Generazione procedurale** di mappe con stanze e corridoi
+- 🎮 **Controlli WASD** per movimento + frecce per sparare
+- 👾 **Nemici rossi** che si muovono casualmente
+- 💥 **Sistema di combattimento** con proiettili gialli
+- 🎨 **Grafica pixel** colorata (verde=player, rosso=nemici, grigio=mura)
+
 
 ISTRUZIONI PER COMPILARE:
 1. Installa SDL2: 
