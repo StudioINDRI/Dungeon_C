@@ -1,17 +1,17 @@
 # Dungeon_C
-Simple C game shooter/dungeon explorer with SDL3 library
+Semplice gioco in C con libreria grafica SLD2 
 
 ISTRUZIONI PER COMPILARE:
 1. Installa SDL2: 
-    - Ubuntu/Debian: sudo apt-get install libsdl2-dev
+    - Linux (Ubuntu): sudo apt install libsdl2-dev
     - macOS: brew install sdl2
     - Windows: scarica SDL2 development libraries dal sito ufficiale
 
  2. Compila con:
-    gcc -o dungeon_game dungeon_game.c -lSDL2 -lSDL2main
+    gcc -o Dungeon_C dungeon.c -lSDL2 -lSDL2main -lm
 
  3. Esegui:
-    ./dungeon_game
+    ./Dungeon_C
 
  CONTROLLI:
  - WASD: movimento
