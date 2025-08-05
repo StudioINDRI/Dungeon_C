@@ -1,5 +1,5 @@
 # Dungeon_C
-Semplice gioco in C con libreria grafica SLD2 
+Un semplice esercizio di programmazione in C L'obbiettivo del progetto è scrivere un gioco semplice, a basso livello e con un'efficiente gestione della memoria e, soprattutto, con le minime dipendenze possibili: l'unica dipendenza è la libreria grafica SLD2
 
 ISTRUZIONI PER COMPILARE:
 1. Installa SDL2: 
