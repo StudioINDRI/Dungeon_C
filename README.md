@@ -14,8 +14,8 @@ a basso livello e con un'efficiente gestione della memoria.
 **Caratteristiche implementate:**
 - 🗺️ **Generazione procedurale** di mappe con stanze e corridoi
 - 🎮 **Controlli WASD** per movimento + frecce per sparare
-- 👾 **Nemici rossi** che si muovono casualmente
-- 💥 **Sistema di combattimento** con proiettili gialli
+- 👾 **Nemici** che si muovono casualmente
+- 💥 **Sistema di combattimento** con proiettili pixel
 - 🎨 **Grafica pixel** colorata (verde=player, rosso=nemici, grigio=mura)
 
 
