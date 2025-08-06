@@ -18,6 +18,7 @@ a basso livello e con un'efficiente gestione della memoria.
 - 💥 **Sistema di combattimento** con proiettili pixel
 - 🎨 **Grafica pixel** colorata (verde=player, rosso=nemici, grigio=mura)
 
+
 **implementazioni future:**
 - 🧠 **Intelligenza artificiale** per i nemici
 - 💰 **Sistema di Loot** da nemici e forzieri
