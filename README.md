@@ -18,6 +18,11 @@ a basso livello e con un'efficiente gestione della memoria.
 - 💥 **Sistema di combattimento** con proiettili pixel
 - 🎨 **Grafica pixel** colorata (verde=player, rosso=nemici, grigio=mura)
 
+**implementazioni future:**
+- 🧠 **Intelligenza artificiale** per i nemici
+- 💰 **Sistema di Loot** da nemici e forzieri
+- 🔫 **Modifiche armi e proiettili** creazione build personaggio
+- ☠️ **Meccaniche rouge-like** morte, vittoria, avanzamento personaggio
 
 **ISTRUZIONI PER LA COMPILAZIONE:**
 1. Installa SDL2: 
@@ -30,6 +35,7 @@ a basso livello e con un'efficiente gestione della memoria.
     gcc -o Dungeon_C dungeon_c.c -lSDL2 -lSDL2main -lm
 
  3. Esegui:
+    
     ./Dungeon_C
 
  **CONTROLLI:**
