@@ -26,6 +26,7 @@ a basso livello e con un'efficiente gestione della memoria.
     - Windows: scarica SDL2 development libraries dal sito ufficiale
 
  2. Compila con:
+    
     gcc -o Dungeon_C dungeon_c.c -lSDL2 -lSDL2main -lm
 
  3. Esegui:
