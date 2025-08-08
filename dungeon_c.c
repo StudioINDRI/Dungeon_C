@@ -361,7 +361,7 @@ int main(int argc, char* argv[]) {
     
     // Crea finestra
     SDL_Window* window = SDL_CreateWindow(
-        "Dungeon Explorer 2D",
+        "Dungeon-C",
         SDL_WINDOWPOS_UNDEFINED,
         SDL_WINDOWPOS_UNDEFINED,
         WINDOW_WIDTH,
